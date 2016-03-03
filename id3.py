@@ -1,6 +1,7 @@
 import numpy as np
 
-infile = 'car.data.txt'
+#infile = 'playtennis.data'
+infile = 'car.data'
 data = [line.strip().split(',') for line in open(infile, 'r')]
 arr = np.array(data)
 
