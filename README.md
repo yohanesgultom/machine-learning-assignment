@@ -1,4 +1,4 @@
-## Machine Learning Assignment
+# Machine Learning Assignment
 Collection of machine learning algorithms with open dataset from [UCI](https://archive.ics.uci.edu/ml/datasets/Car+Evaluation)
 
 ### Prerequisites (Python)
@@ -7,7 +7,7 @@ Collection of machine learning algorithms with open dataset from [UCI](https://a
 2. [PIP](https://pip.pypa.io/en/stable/installing/) >= 1.5.6
 
 
-### Decision Tree ID3 (Python)
+## Decision Tree ID3 (Python)
 Generative learning decision tree based on Entropy (H) and Information Gain (IG)
 
 #### Installation
@@ -49,7 +49,7 @@ While decision tree visualization will be saved in the same directory with forma
 
 ![decision tree](https://github.com/yohanesgultom/machine-learning-assignment/blob/master/car.data.png)
 
-### Naive Bayes Classifier (Python)
+## Naive Bayes Classifier (Python)
 Classifier using Naive Density Estimator
 
 #### Installation
