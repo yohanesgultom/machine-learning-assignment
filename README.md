@@ -26,7 +26,7 @@ Run this commands inside the cloned directory after successful installation:
 python id3.py car.data car.test
 ```
 
-Result will be the attributes and predictions at the end of each lines
+Result will be the attributes and predictions at the end of each lines:
 ```
 {....}
 {'LugBoot': 'big', 'Maint': 'low', 'Persons': '4', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
@@ -43,3 +43,7 @@ Result will be the attributes and predictions at the end of each lines
 Accuracy: 77.1929824561%
 Execution Time: 0.0362010002136s
 ```
+
+While decision tree visualization will be saved in the same directory with format `[data_file_name].png`
+
+![decision tree](https://github.com/yohanesgultom/machine-learning-assignment/blob/master/car.data.png)
