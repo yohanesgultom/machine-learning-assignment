@@ -26,18 +26,18 @@ python id3.py car.data car.test
 Result will be the attributes and predictions at the end of each lines
 ```
 {....}
-
-{'maint': 'vhigh', 'persons': '2', 'lug_boot': 'small', 'safety': 'low', 'doors': '2', 'buying': 'vhigh'} quality: unacc
-{'maint': 'vhigh', 'persons': '2', 'lug_boot': 'small', 'safety': 'med', 'doors': '2', 'buying': 'vhigh'} quality: unacc
-{'maint': 'med', 'persons': '4', 'lug_boot': 'med', 'safety': 'high', 'doors': '2', 'buying': 'vhigh'} quality: acc
-{'maint': 'med', 'persons': '4', 'lug_boot': 'big', 'safety': 'med', 'doors': '2', 'buying': 'vhigh'} quality: acc
-{'maint': 'med', 'persons': '4', 'lug_boot': 'big', 'safety': 'high', 'doors': '2', 'buying': 'vhigh'} quality: acc
-{'maint': 'low', 'persons': '4', 'lug_boot': 'med', 'safety': 'med', 'doors': '5more', 'buying': 'med'} quality: good
-{'maint': 'low', 'persons': 'more', 'lug_boot': 'small', 'safety': 'high', 'doors': '5more', 'buying': 'med'} quality: good
-{'maint': 'low', 'persons': 'more', 'lug_boot': 'big', 'safety': 'med', 'doors': '5more', 'buying': 'med'} quality: good
-{'maint': 'low', 'persons': '4', 'lug_boot': 'med', 'safety': 'high', 'doors': '5more', 'buying': 'med'} quality: vgood
-{'maint': 'low', 'persons': '4', 'lug_boot': 'big', 'safety': 'high', 'doors': '5more', 'buying': 'med'} quality: vgood
-{'maint': 'low', 'persons': 'more', 'lug_boot': 'med', 'safety': 'high', 'doors': '5more', 'buying': 'med'} quality: vgood
-{'maint': 'low', 'persons': 'more', 'lug_boot': 'big', 'safety': 'high', 'doors': '5more', 'buying': 'med'} quality: vgood
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': '4', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': '4', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: vgood (True)
+{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
+{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (True)
+{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
+{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
+{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
+{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: vgood (True)
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: vgood (True)
+Accuracy: 77.1929824561%
+Execution Time: 0.0362010002136s
 ```
 
