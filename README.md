@@ -14,6 +14,9 @@ Generative learning decision tree based on Entropy (H) and Information Gain (IG)
 Run this commands inside the cloned directory:
 ```
 sudo pip install numpy
+sudo pip install Graphviz
+sudo pip install -Iv https://pypi.python.org/packages/source/p/pyparsing/pyparsing-1.5.7.tar.gz#md5=9be0fcdcc595199c646ab317c1d9a709
+sudo pip install pydot
 ```
 
 #### Run Prediction with Sample Data
@@ -40,4 +43,3 @@ Result will be the attributes and predictions at the end of each lines
 Accuracy: 77.1929824561%
 Execution Time: 0.0362010002136s
 ```
-

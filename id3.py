@@ -5,9 +5,14 @@ import numpy as np
 import math
 import sys
 import time
+import pydot
+import ntpath
 
 # id3 data structure
-class node(object):
+class Node(object):
+
+    graph = pydot.Dot(graph_type='graph')
+
     def __init__(self, value, nodes = None):
         self.value = value
         self.children = nodes if nodes != None else []
@@ -37,6 +42,28 @@ class node(object):
             # value node
             # or if no path just take the first child
             return self.children[0].predict(values)
+
+    def draw_to_file(self, filename = 'id3', path = ''):
+        for child in self.children:
+            child.draw(self.value)
+        Node.graph.write_png(filename + '.png')
+
+    def draw(self, parent, label = None):
+        if label != None:
+            # draw node and edge
+            node = pydot.Node(parent + '-' + self.value, label=self.value)
+            Node.graph.add_node(node)
+            edge = pydot.Edge(parent, node)
+            edge.set_label(label)
+            Node.graph.add_edge(edge)
+
+            # process child nodes
+            if len(self.children) > 0:
+                for child in self.children:
+                    child.draw(parent + '-' + self.value)
+        else:
+            # skip edge (value node) but pass parent and label
+            self.children[0].draw(parent, self.value)
 
 
 # calculate entropy
@@ -83,7 +110,7 @@ def id3(attrs, rows, y):
             root = i
             ig = igtmp
 
-    tree = node(attrs[root])
+    tree = Node(attrs[root])
 
     col = root
     dis = distributions(rows[:, col])
@@ -93,7 +120,7 @@ def id3(attrs, rows, y):
         # check if this attribute class c yields same class y
         # if yes then add the class c as an edge with class y as leaf
         if len(disc) == 1:
-            tree.add(node(c, [node(disc.keys()[0])]))
+            tree.add(Node(c, [Node(disc.keys()[0])]))
         else:
             if len(attrs) > 1:
                 # next interation(s)
@@ -101,12 +128,16 @@ def id3(attrs, rows, y):
                 subrows = np.delete(rows, root, 1) # remove root column
                 subrows = subrows[rows[:, col] == c]
                 suby = subrows[:, -1]
-                tree.add(node(c, [id3(subattrs, subrows, suby)]))
+                tree.add(Node(c, [id3(subattrs, subrows, suby)]))
             else:
                 # find highest probability class
                 max_c = max(disc, key=disc.get)
-                tree.add(node(c, [node(max_c)]))
+                tree.add(Node(c, [Node(max_c)]))
     return tree
+
+def path_leaf(path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
 
 # main program
 if __name__ == "__main__":
@@ -115,8 +146,6 @@ if __name__ == "__main__":
     # read training and testing data from argv
     train_file = sys.argv[1]
     test_file = sys.argv[2]
-    # infile = 'playtennis.data'
-    # infile = 'car.data'
 
     # read input file
     raw = [line.strip().split(',') for line in open(train_file, 'r')]
@@ -130,7 +159,8 @@ if __name__ == "__main__":
     tree = id3(attrs, rows, y)
 
     # print the tree
-    #print tree
+    # print tree
+    tree.draw_to_file(train_file)
 
     # read test file
     rawtest = [line.strip().split(',') for line in open(test_file, 'r')]
