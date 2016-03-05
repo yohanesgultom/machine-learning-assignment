@@ -13,8 +13,8 @@ class NBC(object):
         self.attrs = attrs
         self.rows = rows
         self.coly = coly
-        self.disy = distributions(self.rows[:, self.coly])
-        self.p = {}
+        self.disy = self.distributions(self.rows[:, self.coly])
+        self.p = {} # probability cache
 
     def predict(self, values):
         res = None
@@ -31,20 +31,28 @@ class NBC(object):
         return res
 
     def probability(self, c, val, valy):
-        # rows where coly = valy
-        rowsvaly = self.rows[self.rows[:, self.coly] == valy]
-        # rowsvaly where c = val / len(rowsvaly)
-        indexc = self.attrs.tolist().index(c)
-        return len(rowsvaly[rowsvaly[:, indexc] == val]) / float(len(rowsvaly))
+        cache_key = c + '#' + val + '#' + valy
+        if cache_key in self.p:
+            # retrieve from cache
+            return self.p[cache_key]
+        else:
+            # rows where coly = valy
+            rowsvaly = self.rows[self.rows[:, self.coly] == valy]
+            # rowsvaly where c = val / len(rowsvaly)
+            indexc = self.attrs.tolist().index(c)
+            res = len(rowsvaly[rowsvaly[:, indexc] == val]) / float(len(rowsvaly))
+            # store in the cache
+            self.p[cache_key] = res
+            return res
 
-
-# probability distributions of array elements
-def distributions(arr):
-    dis = {}
-    n = len(arr)
-    for x in arr:
-        dis[x] = dis[x] + 1 / float(n) if x in dis else 1 / float(n)
-    return dis
+    # probability distributions of array elements
+    @staticmethod
+    def distributions(arr):
+        dis = {}
+        n = len(arr)
+        for x in arr:
+            dis[x] = dis[x] + 1 / float(n) if x in dis else 1 / float(n)
+        return dis
 
 
 # main program
