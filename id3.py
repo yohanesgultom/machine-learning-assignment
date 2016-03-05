@@ -47,6 +47,7 @@ class Node(object):
         for child in self.children:
             child.draw(self.value)
         Node.graph.write_png(filename + '.png')
+        print 'Tree plotted in ' + filename + '.png'
 
     def draw(self, parent, label = None):
         if label != None:
@@ -65,76 +66,88 @@ class Node(object):
             # skip edge (value node) but pass parent and label
             self.children[0].draw(parent, self.value)
 
-
-# calculate entropy
-def entropy(dis):
-    h = 0
-    for p in dis:
-        h += -p * math.log(p, 2)
-    return h
-
-# probability distributions of array elements
-def distributions(arr):
-    dis = {}
-    n = len(arr)
-    for x in arr:
-        dis[x] = dis[x] + 1 / float(n) if x in dis else 1 / float(n)
-    return dis
-
-# information gain of a column in a rows of dataset
-def info_gain(hy, disy, rows, col):
-    ig = 0
-    # distributions of column col
-    dis = distributions(rows[:, col])
-    # sum
-    for c, p in dis.iteritems():
-        # entropy y given column col = class c
-        rowsc = rows[rows[:, col] == c]
-        disc = distributions(rowsc[:, -1])
-        hc = entropy(disc.values())
-        ig += p * hc
-    return hy - ig
-
 # id3 algorithm using id3 structure
-def id3(attrs, rows, y):
-    # class entropy
-    disy = distributions(y)
-    hy = entropy(disy.values())
+class ID3(object):
 
-    # find root
-    ig = 0
-    root = None
-    for i in range(len(attrs)):
-        igtmp = info_gain(hy, disy, rows, i)
-        if igtmp > ig:
-            root = i
-            ig = igtmp
+    def __init__(self, attrs, rows, y, coly):
+        self.attrs = attrs # array of attributes (exclude y)
+        self.rows = rows # data rows (incl y)
+        self.y = y # y rows
+        self.coly = coly # column position of y
+        self.disy = {} # distribution of y
+        self.hy = 0 # y class entropy
 
-    tree = Node(attrs[root])
+    def tree(self):
+        # class entropy
+        self.disy = self.distributions(self.y)
+        self.hy = self.entropy(self.disy.values())
 
-    col = root
-    dis = distributions(rows[:, col])
-    for c, p in dis.iteritems():
-        rowsc = rows[rows[:, col] == c]
-        disc = distributions(rowsc[:, -1])
-        # check if this attribute class c yields same class y
-        # if yes then add the class c as an edge with class y as leaf
-        if len(disc) == 1:
-            tree.add(Node(c, [Node(disc.keys()[0])]))
-        else:
-            if len(attrs) > 1:
-                # next interation(s)
-                subattrs = np.delete(attrs, root) # remove root attributes
-                subrows = np.delete(rows, root, 1) # remove root column
-                subrows = subrows[rows[:, col] == c]
-                suby = subrows[:, -1]
-                tree.add(Node(c, [id3(subattrs, subrows, suby)]))
+        # find root
+        ig = 0
+        root = None
+        for i in range(len(self.attrs)):
+            igtmp = self.info_gain(i)
+            if igtmp > ig:
+                root = i
+                ig = igtmp
+
+        tree = Node(self.attrs[root])
+
+        col = root
+        dis = self.distributions(self.rows[:, col])
+        for c, p in dis.iteritems():
+            rowsc = self.rows[self.rows[:, col] == c]
+            disc = self.distributions(rowsc[:, self.coly])
+            # check if this attribute class c yields same class y
+            # if yes then add the class c as an edge with class y as leaf
+            if len(disc) == 1:
+                tree.add(Node(c, [Node(disc.keys()[0])]))
             else:
-                # find highest probability class
-                max_c = max(disc, key=disc.get)
-                tree.add(Node(c, [Node(max_c)]))
-    return tree
+                if len(attrs) > 1:
+                    # next interation(s)
+                    subattrs = np.delete(self.attrs, root) # remove root attributes
+                    subrows = np.delete(self.rows, root, 1) # remove root column
+                    subrows = subrows[self.rows[:, col] == c]
+                    suby = subrows[:, self.coly]
+                    tree.add(Node(c, [ID3(subattrs, subrows, suby, self.coly).tree()]))
+                else:
+                    # find highest probability class
+                    max_c = max(disc, key=disc.get)
+                    tree.add(Node(c, [Node(max_c)]))
+        return tree
 
+    # information gain of a column in a rows of dataset
+    def info_gain(self, col):
+        ig = 0
+        # distributions of column col
+        dis = self.distributions(self.rows[:, col])
+        # sum
+        for c, p in dis.iteritems():
+            # entropy y given column col = class c
+            rowsc = self.rows[self.rows[:, col] == c]
+            disc = self.distributions(rowsc[:, self.coly])
+            hc = self.entropy(disc.values())
+            ig += p * hc
+        return self.hy - ig
+
+    # calculate entropy
+    @staticmethod
+    def entropy(dis):
+        h = 0
+        for p in dis:
+            h += -p * math.log(p, 2)
+        return h
+
+    # probability distributions of array elements
+    @staticmethod
+    def distributions(arr):
+        dis = {}
+        n = len(arr)
+        for x in arr:
+            dis[x] = dis[x] + 1 / float(n) if x in dis else 1 / float(n)
+        return dis
+
+# extract filename from path regardless of OS
 def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
@@ -146,21 +159,25 @@ if __name__ == "__main__":
     # read training and testing data from argv
     train_file = sys.argv[1]
     test_file = sys.argv[2]
+    plot = True if len(sys.argv) >= 4 and sys.argv[3] == '--plot' else False # draw tree or not
+
 
     # read input file
     raw = [line.strip().split(',') for line in open(train_file, 'r')]
     data = np.array(raw)
 
     # build (train) id3
-    attrs = data[0, :-1] # attributes
+    coly = -1
+    attrs = data[0, :coly] # attributes
     rows = data[1:, :] # datasets (including results)
-    yclass = data[0, -1]
-    y = data[1:, -1] # y = result
-    tree = id3(attrs, rows, y)
+    yclass = data[0, coly]
+    y = data[1:, coly] # y = result
+    tree = ID3(attrs, rows, y, coly).tree()
 
     # print the tree
     # print tree
-    tree.draw_to_file(train_file)
+    if plot:
+        tree.draw_to_file(train_file)
 
     # read test file
     rawtest = [line.strip().split(',') for line in open(test_file, 'r')]

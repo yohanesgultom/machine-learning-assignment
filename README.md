@@ -42,10 +42,14 @@ Result will be the attributes and predictions at the end of each lines followed 
 {'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
 {'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: vgood (True)
 Accuracy: 77.1929824561%
-Execution Time: 0.0362010002136s
+Execution Time: 0.871682882309s
+```
+Add option `--plot` to plot the decision tree in png format:
+```
+python id3.py car.data car.test --plot
 ```
 
-While decision tree visualization will be saved in the same directory with format `[data_file_name].png`
+The result is saved in the same directory with file name pattern `[data_file_name].png` eg. car.data.png:
 
 ![decision tree](https://github.com/yohanesgultom/machine-learning-assignment/blob/master/car.data.png)
 
