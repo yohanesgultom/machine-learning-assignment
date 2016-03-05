@@ -4,6 +4,7 @@
 import numpy as np
 import math
 import sys
+import time
 
 # id3 data structure
 class node(object):
@@ -33,9 +34,9 @@ class node(object):
                 for child in self.children:
                     if child.value == val:
                         return child.predict(values)
-            else:
-                # value node
-                return self.children[0].predict(values)
+            # value node
+            # or if no path just take the first child
+            return self.children[0].predict(values)
 
 
 # calculate entropy
@@ -102,11 +103,14 @@ def id3(attrs, rows, y):
                 suby = subrows[:, -1]
                 tree.add(node(c, [id3(subattrs, subrows, suby)]))
             else:
-                tree.add(node(c, [node('?')]))
+                # find highest probability class
+                max_c = max(disc, key=disc.get)
+                tree.add(node(c, [node(max_c)]))
     return tree
 
 # main program
 if __name__ == "__main__":
+    execution_time = -time.time()
 
     # read training and testing data from argv
     train_file = sys.argv[1]
@@ -126,16 +130,25 @@ if __name__ == "__main__":
     tree = id3(attrs, rows, y)
 
     # print the tree
-    print tree
+    #print tree
 
     # read test file
     rawtest = [line.strip().split(',') for line in open(test_file, 'r')]
 
     # predict
+    total_correct = 0
     for i in range(len(rawtest)):
         # skip header
         if i > 0:
             values = {}
             for j in range(len(attrs)):
                 values[attrs[j]] = rawtest[i][j]
-            print str(values) + ' ' + yclass + ': ' + tree.predict(values)
+            prediction = tree.predict(values)
+            correct = (prediction == rawtest[i][-1])
+            total_correct += 1 if correct else 0
+            print str(values) + ' ' + yclass + ': ' + str(prediction) + ' (' + str(correct) + ')'
+
+    accuracy = total_correct / float(len(rawtest)-1) * 100
+    execution_time += time.time()
+    print 'Accuracy: ' + str(accuracy) + '%'
+    print 'Execution Time: ' + str(execution_time) + 's'
