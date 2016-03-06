@@ -12,6 +12,7 @@ import ntpath
 class Node(object):
 
     graph = pydot.Dot(graph_type='graph')
+    counter = 0
 
     def __init__(self, value, nodes = None):
         self.value = value
@@ -52,7 +53,8 @@ class Node(object):
     def draw(self, parent, label = None):
         if label != None:
             # draw node and edge
-            node = pydot.Node(parent + '-' + self.value, label=self.value)
+            node_id = str(Node.counter) + self.value
+            node = pydot.Node(node_id, label=self.value)
             Node.graph.add_node(node)
             edge = pydot.Edge(parent, node)
             edge.set_label(label)
@@ -61,7 +63,8 @@ class Node(object):
             # process child nodes
             if len(self.children) > 0:
                 for child in self.children:
-                    child.draw(parent + '-' + self.value)
+                    child.draw(node)
+            Node.counter += 1
         else:
             # skip edge (value node) but pass parent and label
             self.children[0].draw(parent, self.value)
