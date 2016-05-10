@@ -1,0 +1,14 @@
+{
+    "happy" :
+    {
+        "label" : "Happy",
+        "e" : { "smile" : 0.5, "frown" : 0.1, "laugh" : 0.2, "yell" : 0.2 },
+        "a" : { "happy" : 0.8, "angry" : 0.2 }
+    },
+    "angry" :
+    {
+        "label" : "Angry",
+        "e" : { "smile" : 0.1, "frown" : 0.5, "laugh" : 0.2, "yell" : 0.2 },
+        "a" : { "happy" : 0.2, "angry" : 0.8 }
+    }
+}
