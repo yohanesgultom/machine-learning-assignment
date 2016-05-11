@@ -45,6 +45,29 @@ def reach_emission(curstate, question, model):
             curstate = model[next]
     return prob
 
+def reach_emission_given_state(curstate, question, model):
+    prob = 1
+    t_emission = question['o']['t']
+    t_state = question['q']['t']
+    for i in range(1, t_emission+1):
+        if i == t_emission:
+            # get selected emission prob
+            emission = question['o']['state']
+            e = curstate['e'][emission]
+            if e == None:
+                sys.exit('unknown emission: ' + emission)
+            print emission + ' ' + str(e)
+            prob = prob * e
+        else:
+            # greedy if not yet arriving at t-1
+            next = max_key(curstate['a']) if i < (t_state-1) else question['q']['state']
+            if curstate['a'][next] == None:
+                sys.exit('unknown state: ' + next)
+            print str(i) + ' : ' + curstate['label'] + ' -> ' + model[next]['label'] + ' ' + str(curstate['a'][next])
+            prob = prob * curstate['a'][next]
+            curstate = model[next]
+    return prob
+
 def best_path(curstate, question, model):
     prob = 1
     t = question['b']['t']
@@ -129,15 +152,7 @@ if __name__ == "__main__":
         print 'Best path (greedy): ' + best
 
     elif question['q'] != None and question['o'] != None:
-        prob_q = reach_state(curstate, question, model)
-        curstate = model[first_state] # reset
-        prob_o = reach_emission(curstate, question, model)
-        if  question['q']['index'] < question['o']['index']:
-            # P(q|o) = P(q).p(o)/p(o)
-            prob = prob_q * prob_o / prob_o
-        else:
-            # P(o|q) = P(q).p(o)/p(q)
-            prob = prob_q * prob_o / prob_q
+        prob = reach_emission_given_state(curstate, question, model)
 
     elif question['q'] != None:
         prob = reach_state(curstate, question, model)
