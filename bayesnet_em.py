@@ -78,6 +78,10 @@ def populate_probs(model, data):
     for id, state in model.iteritems():
         populate_prob(state, data)
 
+def em(model):
+    for s in model:
+        print s['id']
+
 if __name__ == "__main__":
 
     # load data
@@ -93,4 +97,5 @@ if __name__ == "__main__":
 
     generate_rules(model)
     populate_probs(model, data)
+    em(model)
     # pprint.pprint(model)
