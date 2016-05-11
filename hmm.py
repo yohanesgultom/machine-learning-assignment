@@ -62,7 +62,7 @@ def best_path(curstate, question, model):
                 best_str = best_str + ' -- ' + str(prev_state['a'][curstate['id']]) + ' --> '
             best_str = best_str + curstate['label']
             prev_state = curstate
-            
+
         else: # if i >= (t-1)
             emission = max_key(curstate['e'])
             p_e = curstate['e'][emission]
