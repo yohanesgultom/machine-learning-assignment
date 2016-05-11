@@ -1,0 +1,23 @@
+{
+    "flu" :
+    {
+        "affects" : [ "sinus" ]
+    },
+    "allergy" :
+    {
+        "affects" : [ "sinus" ]
+    },
+    "sinus" :
+    {
+        "depends" : [ "flu", "allergy" ],
+        "affects" : [ "headache", "nose" ]
+    },
+    "headache" :
+    {
+        "depends" : [ "sinus" ]
+    },
+    "nose" :
+    {
+        "depends" : [ "sinus" ]
+    }
+}
