@@ -1,9 +1,15 @@
 # Bayesian Network with EM Algorithm
 # by yohanes.gultom@gmail.com
+
 import json
 import sys
 import itertools
 import pprint
+import math
+
+# initial em value
+CONST_E_VALUE = 0.5
+CONST_THRESHOLD = 0.0
 
 def generate_rules(model):
     for index, state in model.iteritems():
@@ -36,51 +42,104 @@ def combinations(ids, model):
 def populate_prob(state, data):
     s = state['id']
     rules = state['rules']
-    incompletes = []
     for rule in rules:
-        count = 0
-        match = 0
-        complete = True
-        for row in data:
-            # check if match given
-            match_given = True
-            null_given = []
-            pprint.pprint(rule)
-            for key, val in rule['given'].iteritems():
-                # check incomplete
-                if row[key] == None:
-                    # match_given = match_given and True
-                    null_given.append(key)
-                else:
-                    match_given = match_given and (row[key] == val)
-            # process only if matches given
-            if match_given:
-                # count total
-                if len(null_given) == 0:
-                    count = count + 1
-                else:
-                    count = count + 0.5
-                # check if match rule
-                if row[s] == rule['value']:
-                    match = match + 1
-                # check incomplete
-                elif row[s] == None:
-                    null_given.append(key)
-                    match = match + 1 / float(len(state['values']))
-                # mark rule incompleteness
-                if len(null_given) > 0:
-                    complete = False
-        # calculate probability & mark incompleteness
-        rule['probability'] = match / float(count)
-        rule['complete'] = complete
+        calculate_prob(s, rule, data)
+
+def calculate_prob(s, rule, data):
+    count = 0
+    match = 0
+    complete = True
+    numerator_predict = None
+    denominator_predict = None
+    for row in data:
+        # check if match given
+        match_given = True
+        null_given = []
+        for key, val in rule['given'].iteritems():
+            # check incomplete
+            if row[key] == None:
+                # match_given = match_given and True
+                null_given.append(key)
+            else:
+                match_given = match_given and (row[key] == val)
+        # process only if matches given
+        if match_given:
+            # count total
+            if len(null_given) == 0:
+                count = count + 1
+            else:
+                denominator_predict = rule['denominator_predict'] if rule.has_key('denominator_predict') else CONST_E_VALUE
+                count = count + denominator_predict
+            # check if match rule
+            if row[s] == rule['value']:
+                match = match + 1
+            # check incomplete
+            elif row[s] == None:
+                null_given.append(key)
+                numerator_predict = rule['numerator_predict'] if rule.has_key('numerator_predict') else CONST_E_VALUE
+                match = match + numerator_predict
+            # mark rule incompleteness
+            if len(null_given) > 0:
+                complete = False
+    # calculate probability & mark incompleteness
+    rule['probability'] = match / float(count)
+    rule['complete'] = complete
+    rule['numerator_predict'] = numerator_predict
+    rule['denominator_predict'] = denominator_predict
+
 
 def populate_probs(model, data):
     for id, state in model.iteritems():
         populate_prob(state, data)
 
-def em(model):
-    for s in model:
-        print s['id']
+def em(model, data):
+    sum_diff = 0.0
+    found = False
+    for id, state in model.iteritems():
+        for rule in state['rules']:
+            if rule['complete'] == False:
+                if rule.has_key('diff') == False or rule['diff'] > CONST_THRESHOLD:
+                    found = True if found == False else found
+                    # print rule
+                    if rule['numerator_predict'] != None:
+                        rule['diff'] = math.fabs(rule['numerator_predict'] - rule['probability'])
+                        # print 'numerator_predict = ' + str(rule['numerator_predict'])
+                        # print 'probability = ' + str(rule['probability'])
+                        # print 'diff = ' + str(rule['diff'])
+                        rule['numerator_predict'] = rule['probability']
+                        sum_diff = sum_diff + rule['diff']
+                    if rule['denominator_predict'] != None:
+                        rule['diff'] = math.fabs(rule['denominator_predict'] - rule['probability'])
+                        # print 'denominator_predict = ' + str(rule['denominator_predict'])
+                        # print 'probability = ' + str(rule['probability'])
+                        # print 'diff = ' + str(rule['diff'])
+                        rule['denominator_predict'] = rule['probability']
+                        sum_diff = sum_diff + rule['diff']
+                    calculate_prob(id, rule, data)
+    print 'Total diff = ' + str(sum_diff)
+    return sum_diff
+
+def print_incomplete_rules(model):
+    for id, state in model.iteritems():
+        for rule in state['rules']:
+            if rule['complete'] == False:
+                rulestr = 'P(' + id + '=' + str(rule['value'])
+                if (len(rule['given']) > 0):
+                    rulestr = rulestr + ' | '
+                    count = 0
+                    for given_id, given_val in rule['given'].iteritems():
+                        if count > 0:
+                            rulestr = rulestr + ', '
+                        rulestr = rulestr + given_id + '=' + str(given_val)
+                        count = count + 1
+                rulestr = rulestr + ')'
+                print rulestr + ' = ' + str(rule['probability'])
+
+# Usage:
+# python bayesnet_em.py [model file] [data file] [optional: EM threshold] [optional: EM initial value]
+# Example:
+# python bayesnet_em.py flu-alergy.model.json flu-alergy.data.json
+# python bayesnet_em.py flu-alergy.model.json flu-alergy.data.json 0.0001 0.6
 
 if __name__ == "__main__":
 
@@ -95,7 +154,24 @@ if __name__ == "__main__":
     with open(sys.argv[2], 'r') as f:
          data = json.load(f)
 
+    if len(sys.argv) >= 4:
+        CONST_THRESHOLD = float(sys.argv[3])
+
+    if len(sys.argv) >= 5:
+        CONST_E_VALUE = float(sys.argv[4])
+
+    print 'CONST_THRESHOLD = ' + str(CONST_THRESHOLD)
+    print 'CONST_E_VALUE = ' + str(CONST_E_VALUE)
+
+    # generate rules from model
     generate_rules(model)
+
+    # calculate probability from data
     populate_probs(model, data)
-    em(model)
-    # pprint.pprint(model)
+
+    # do em algorithm
+    diff = em(model, data)
+    while diff > CONST_THRESHOLD:
+        diff = em(model, data)
+
+    print_incomplete_rules(model)
