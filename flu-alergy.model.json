@@ -1,23 +1,28 @@
 {
     "flu" :
     {
+        "values" : [ true, false ],
         "affects" : [ "sinus" ]
     },
     "allergy" :
     {
+        "values" : [ true, false ],
         "affects" : [ "sinus" ]
     },
     "sinus" :
     {
+        "values" : [ true, false ],
         "depends" : [ "flu", "allergy" ],
         "affects" : [ "headache", "nose" ]
     },
     "headache" :
     {
+        "values" : [ true, false ],
         "depends" : [ "sinus" ]
     },
     "nose" :
     {
+        "values" : [ true, false ],
         "depends" : [ "sinus" ]
     }
 }

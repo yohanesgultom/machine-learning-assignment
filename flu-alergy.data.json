@@ -1,0 +1,10 @@
+[
+    {"flu" :  true, "allergy" :  0, "sinus" :  true, "headache" :  true, "nose" :  true},
+    {"flu" :  0, "allergy" :  true, "sinus" :  true, "headache" :  true, "nose" :  0},
+    {"flu" :  true, "allergy" :  true, "sinus" :  true, "headache" :  true, "nose" :  true},
+    {"flu" :  0, "allergy" :  0, "sinus" :  0, "headache" :  0, "nose" :  0},
+    {"flu" :  0, "allergy" :  0, "sinus" :  0, "headache" :  true, "nose" :  0},
+    {"flu" :  0, "allergy" :  0, "sinus" :  0, "headache" :  0, "nose" :  true},
+    {"flu" :  true, "allergy" :  true, "sinus" :  true, "headache" :  null, "nose" :  true},
+    {"flu" :  true, "allergy" :  true, "sinus" :  true, "headache" :  0, "nose" :  null}
+]
