@@ -122,3 +122,34 @@ Result will be the attributes and predictions at the end of each lines followed 
 Accuracy: 55.5555555556%
 Execution Time: 0.0280420780182s
 ```
+
+## Linear Regression
+
+Basic linear regression to predict profit. Written based on http://aimotion.blogspot.co.id/2011/10/machine-learning-with-python-linear.html.
+
+#### Installation
+```
+sudo pip install numpy
+sudo pip install matplotlib
+```
+
+#### Running
+```
+python linreg.py
+```
+
+
+## Artificial Neural Network (ANN)
+
+Basic ANN with 1 input layer, 1 hidden layer and 1 output layer. Written based on awesome tutorial from http://iamtrask.github.io/2015/07/12/basic-python-network/ with some additional data visualization.
+
+#### Installation
+```
+sudo pip install numpy
+sudo pip install matplotlib
+```
+
+#### Running
+```
+python ann.py
+```
