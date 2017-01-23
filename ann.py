@@ -1,4 +1,4 @@
-# Neural network
+# Simple neural network to learn XOR function
 # Author: yohanes.gultom@gmail.com
 # Reference http://iamtrask.github.io/2015/07/12/basic-python-network/
 
@@ -6,18 +6,18 @@ import numpy as np
 import progressbar
 import matplotlib.pyplot as plt
 
-# dummy data
+# XOR dataset
 X = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
 y = np.array([[0, 1, 1, 0]]).T
 
-# initialize weight of 2 layers
+# initialize weights of input layer and hidden layer
 syn0 = 2 * np.random.random((3, 4)) - 1
 syn1 = 2 * np.random.random((4, 1)) - 1
 
 # iterations / epochs
 epoch = 800
 error_history = np.zeros(shape=(epoch, 2))
-bar = progressbar.ProgressBar(max_value=epoch)
+bar = progressbar.ProgressBar(maxval=epoch).start()
 for j in xrange(epoch):
 
     # forward propagation
@@ -26,9 +26,7 @@ for j in xrange(epoch):
     l2 = 1 / (1 + np.exp(-(np.dot(l1, syn1))))
 
     # backpropagation
-
-    # calculate error
-    # for each layers
+    # calculate error for each layers
     # using sigmoid derivation: W * (1 - W)
     l2_delta = (y - l2) * (l2 * (1 - l2))
     l1_delta = l2_delta.dot(syn1.T) * (l1 * (1 - l1))
@@ -38,7 +36,7 @@ for j in xrange(epoch):
     syn1 += l1.T.dot(l2_delta)
     syn0 += X.T.dot(l1_delta)
 
-    # track MSE history
+    # track MSE history for visualization
     error_history[j, 0] = (l1_delta ** 2).mean()
     error_history[j, 1] = (l2_delta ** 2).mean()
     bar.update(j)

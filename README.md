@@ -141,12 +141,13 @@ python linreg.py
 
 ## Artificial Neural Network (ANN)
 
-Basic ANN with 1 input layer, 1 hidden layer and 1 output layer. Written based on awesome tutorial from http://iamtrask.github.io/2015/07/12/basic-python-network/ with some additional data visualization.
+Simple ANN with one input layer and one hidden layer to learn binary XOR function. Written based on awesome tutorial from http://iamtrask.github.io/2015/07/12/basic-python-network/ with an additional error visualization.
 
 #### Installation
 ```
 sudo pip install numpy
 sudo pip install matplotlib
+sudo pip install progressbar
 ```
 
 #### Running
