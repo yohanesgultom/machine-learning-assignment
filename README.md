@@ -1,156 +1,34 @@
 # Machine Learning Assignment
-Collection of machine learning algorithms with open dataset from [UCI](https://archive.ics.uci.edu/ml/datasets/Car+Evaluation)
 
-### Prerequisites (Python)
+Collection of machine learning algorithms written from scratch with Numpy. Most code here is written to understand how they work. It is not optimized for production. Use it at your own risk.
 
-1. [Python](https://www.python.org/downloads/) >= 2.7
-2. [PIP](https://pip.pypa.io/en/stable/installing/) >= 1.5.6
+## Setup
 
+Prerequisites:
+1. [Python](https://www.python.org/downloads/) >= 3.x
+1. Graphviz >= 2.40 (on Ubuntu: `sudo apt install graphviz`)
 
-## Decision Tree ID3 (Python)
-Generative learning decision tree based on Entropy (H) and Information Gain (IG)
+Setup steps:
 
-#### Installation
+1. Clone this repo
+1. Install dependencies `pip install -r requirements.txt`
 
-If you haven't done it before, run this commands inside the cloned directory:
-```
-sudo pip install numpy
-sudo pip install Graphviz
-sudo pip install -Iv https://pypi.python.org/packages/source/p/pyparsing/pyparsing-1.5.7.tar.gz#md5=9be0fcdcc595199c646ab317c1d9a709
-sudo pip install pydot
-```
+## Table of contents
 
-#### Run Prediction with Sample Data
+1. [Decision Tree](id3.py)
+1. [Naive Bayes Classifier](nbc.py)
+1. [Bayesian Network with Expectation-Maximization](bayesnet_em.py)
+1. [Join-Distribution Bayes Classifier](jbc.py)
+1. [Linear Regression](linreg.py) vs [Normal Equation](normalequation.py)
+1. [Hidden Markov Model](hmm.py)
+1. [Artificial Neural Network](ann.py)
 
-Run this commands inside the cloned directory after successful installation:
-```
-python id3.py car.data car.test
-```
+## License
 
-Result will be the attributes and predictions at the end of each lines followed by **Accuracy** & **Execution Time**:
-```
-{....}
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': '4', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': '4', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: vgood (True)
-{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
-{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (True)
-{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
-{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: vgood (True)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: vgood (True)
-Accuracy: 77.1929824561%
-Execution Time: 0.871682882309s
-```
-Add option `--plot` to plot the decision tree in png format:
-```
-python id3.py car.data car.test --plot
-```
+The MIT License
 
-The result is saved in the same directory with file name pattern `[data_file_name].png` eg. car.data.png:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-![decision tree](https://github.com/yohanesgultom/machine-learning-assignment/blob/master/car.data.png)
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-## Naive Bayes Classifier (Python)
-Classifier using Naive Density Estimator
-
-#### Installation
-
-If you haven't done it before, run this commands inside the cloned directory:
-```
-sudo pip install numpy
-```
-
-#### Run Prediction with Sample Data
-
-Run this commands inside the cloned directory after successful installation:
-```
-python nbc.py car.data car.test
-```
-
-Result will be the attributes and predictions at the end of each lines followed by **Accuracy** & **Execution Time**:
-```
-{....}
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': '4', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': '4', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
-{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (True)
-{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
-{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: vgood (True)
-Accuracy: 63.7426900585%
-Execution Time: 0.186897993088s
-```
-
-## Join-Distribution Bayes Classifier (Python)
-Classifier using Join-Distribution Density Estimator
-
-#### Installation
-
-If you haven't done it before, run this commands inside the cloned directory:
-```
-sudo pip install numpy
-```
-
-#### Run Prediction with Sample Data
-
-Run this commands inside the cloned directory after successful installation:
-```
-python jbc.py car.data car.test
-```
-
-Result will be the attributes and predictions at the end of each lines followed by **Accuracy** & **Execution Time**:
-```
-{....}
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': '4', 'Safety': 'med', 'Doors': '5more', 'Quality': 'good', 'Buying': 'low'} Quality: unacc (False)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': '4', 'Safety': 'high', 'Doors': '5more', 'Quality': 'vgood', 'Buying': 'low'} Quality: unacc (False)
-{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Quality': 'unacc', 'Buying': 'low'} Quality: unacc (True)
-{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Quality': 'acc', 'Buying': 'low'} Quality: unacc (False)
-{'LugBoot': 'small', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Quality': 'good', 'Buying': 'low'} Quality: unacc (False)
-{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Quality': 'unacc', 'Buying': 'low'} Quality: unacc (True)
-{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Quality': 'good', 'Buying': 'low'} Quality: unacc (False)
-{'LugBoot': 'med', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Quality': 'vgood', 'Buying': 'low'} Quality: unacc (False)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Quality': 'unacc', 'Buying': 'low'} Quality: unacc (True)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Quality': 'good', 'Buying': 'low'} Quality: unacc (False)
-{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Quality': 'vgood', 'Buying': 'low'} Quality: unacc (False)
-Accuracy: 55.5555555556%
-Execution Time: 0.0280420780182s
-```
-
-## Linear Regression
-
-Basic linear regression to predict profit. Written based on http://aimotion.blogspot.co.id/2011/10/machine-learning-with-python-linear.html.
-
-#### Installation
-```
-sudo pip install numpy
-sudo pip install matplotlib
-```
-
-#### Running
-```
-python linreg.py
-```
-
-
-## Artificial Neural Network (ANN)
-
-Simple ANN with one input layer and one hidden layer to learn binary XOR function. Written based on awesome tutorial from http://iamtrask.github.io/2015/07/12/basic-python-network/ with an additional error visualization.
-
-#### Installation
-```
-sudo pip install numpy
-sudo pip install matplotlib
-sudo pip install progressbar
-```
-
-#### Running
-```
-python ann.py
-```
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

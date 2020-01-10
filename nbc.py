@@ -1,5 +1,21 @@
-# Naive bayes classifier algorithm
-# author: yohanes.gultom@gmail.com
+"""
+# Naive Bayes Classifier
+Classifier using Naive Density Estimator
+
+Command: `python nbc.py car.data car.test`
+
+Result will be the attributes and predictions at the end of each lines followed by Accuracy & Execution Time:
+
+```
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Buying': 'low'} Quality: unacc (True)
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Buying': 'low'} Quality: acc (False)
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Buying': 'low'} Quality: vgood (True)
+Accuracy: 63.7426900585%
+Execution Time: 0.186897993088s
+```
+
+@author yohanes.gultom@gmail.com
+"""
 
 import numpy as np
 import math
@@ -19,9 +35,9 @@ class NBC(object):
     def predict(self, values):
         res = None
         maxp = 0
-        for valy, pvaly in self.disy.iteritems():
+        for valy, pvaly in self.disy.items():
             p = pvaly
-            for c, val in values.iteritems():
+            for c, val in values.items():
                 # p(c = val | y = cy)
                 p *= self.probability(c, val, valy)
             # choose max p
@@ -89,9 +105,9 @@ if __name__ == "__main__":
             prediction = nbc.predict(values)
             correct = (prediction == rawtest[i][coly])
             total_correct += 1 if correct else 0
-            print str(values) + ' ' + yclass + ': ' + str(prediction) + ' (' + str(correct) + ')'
+            print('{} {}: {} ({})'.format(values, yclass, prediction, correct))
 
     accuracy = total_correct / float(len(rawtest)-1) * 100
     execution_time += time.time()
-    print 'Accuracy: ' + str(accuracy) + '%'
-    print 'Execution Time: ' + str(execution_time) + 's'
+    print('Accuracy: {}%'.format(accuracy))
+    print('Execution Time: {}s'.format(execution_time))

@@ -1,6 +1,12 @@
-# Linear regression with one variable
-# author: yohanes.gultom@gmail.com
-# Reference http://aimotion.blogspot.co.id/2011/10/machine-learning-with-python-linear.html
+"""
+# Linear Regression
+
+Basic (single variable) linear regression to predict profit. Written based on http://aimotion.blogspot.co.id/2011/10/machine-learning-with-python-linear.html.
+
+Command: python linreg.py
+
+@author yohanes.gultom@gmail.com
+"""
 
 from numpy import loadtxt, zeros, ones, array, linspace, logspace, arange
 import matplotlib.pyplot as plt
@@ -70,16 +76,16 @@ if __name__ == "__main__":
     alpha = 0.01
 
     # compute and display initial cost
-    print compute_cost(it, y, theta)
+    print(compute_cost(it, y, theta))
 
     theta, J_history = gradient_descent(it, y, theta, alpha, iterations)
 
-    print theta
+    print(theta)
     # Predict values for population sizes of 35,000 and 70,000
-    predict1 = array([1, 3.5]).dot(theta).flatten()
-    print 'For population = 35,000, we predict a profit of %f' % (predict1 * 10000)
-    predict2 = array([1, 7.0]).dot(theta).flatten()
-    print 'For population = 70,000, we predict a profit of %f' % (predict2 * 10000)
+    predict1 = array([1, 3.5]).dot(theta).flatten()[0]
+    print('For population = 35,000, we predict a profit of {:.4f}'.format(predict1 * 10000))
+    predict2 = array([1, 7.0]).dot(theta).flatten()[0]
+    print('For population = 70,000, we predict a profit of {:.4f}'.format(predict2 * 10000))
 
     # Plot the results
     result = it.dot(theta).flatten()

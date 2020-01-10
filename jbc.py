@@ -1,5 +1,21 @@
-# Join-distribution bayes classifier algorithm
-# author: yohanes.gultom@gmail.com
+"""
+# Join-Distribution Bayes Classifier
+
+Classifier using Join-Distribution Density Estimator
+
+Command: python jbc.py car.data car.test
+
+Result will be the attributes and predictions at the end of each lines followed by Accuracy & Execution Time:
+```
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'low', 'Doors': '5more', 'Quality': 'unacc', 'Buying': 'low'} Quality: unacc (True)
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'med', 'Doors': '5more', 'Quality': 'good', 'Buying': 'low'} Quality: unacc (False)
+{'LugBoot': 'big', 'Maint': 'low', 'Persons': 'more', 'Safety': 'high', 'Doors': '5more', 'Quality': 'vgood', 'Buying': 'low'} Quality: unacc (False)
+Accuracy: 55.5555555556%
+Execution Time: 0.0280420780182s
+```
+
+@author yohanes.gultom@gmail.com
+"""
 
 import numpy as np
 import math
@@ -43,7 +59,7 @@ class JBC(object):
         # get default prediction (y class with highest probability)
         classy = self.attrs.tolist()[self.coly]
         maxp = 0
-        for valy, pvaly in self.truth_table_ind[classy].iteritems():
+        for valy, pvaly in self.truth_table_ind[classy].items():
             if pvaly > maxp:
                 maxp = pvaly
                 self.default_prediction = valy
@@ -54,7 +70,7 @@ class JBC(object):
         classy = self.attrs.tolist()[self.coly]
         base_key = '#'.join([values[attr] for attr in self.attrs[:-1]])
         # get max likelihood from all class y
-        for valy, pvaly in self.truth_table_ind[classy].iteritems():
+        for valy, pvaly in self.truth_table_ind[classy].items():
             key = base_key+'#'+valy
             if key in self.truth_table_join:
                 # get join probability from truth table
@@ -103,9 +119,9 @@ if __name__ == "__main__":
             prediction = jbc.predict(values)
             correct = (prediction == rawtest[i][coly])
             total_correct += 1 if correct else 0
-            print str(values) + ' ' + yclass + ': ' + str(prediction) + ' (' + str(correct) + ')'
+            print('{} {}: {} ({})'.format(values, yclass, prediction, correct))
 
     accuracy = total_correct / float(len(rawtest)-1) * 100
     execution_time += time.time()
-    print 'Accuracy: ' + str(accuracy) + '%'
-    print 'Execution Time: ' + str(execution_time) + 's'
+    print('Accuracy: {}%'.format(accuracy))
+    print('Execution Time: {}s'.format(execution_time))

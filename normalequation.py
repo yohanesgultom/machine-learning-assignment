@@ -1,4 +1,10 @@
-# Reference http://anwarruff.com/normal-equation/
+"""
+Normal Equation
+
+Reference http://anwarruff.com/normal-equation/
+
+@author yohanes.gultom@gmail.com
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt

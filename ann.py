@@ -1,6 +1,12 @@
-# Simple neural network to learn XOR function
-# Author: yohanes.gultom@gmail.com
-# Reference http://iamtrask.github.io/2015/07/12/basic-python-network/
+"""
+# Artificial Neural Network (ANN)
+
+Simple ANN with one input layer and one hidden layer to learn binary XOR function. Written based on awesome tutorial from http://iamtrask.github.io/2015/07/12/basic-python-network/ with an additional error visualization.
+
+Command: python ann.py
+
+@author yohanes.gultom@gmail.com
+"""
 
 import numpy as np
 import progressbar
@@ -18,7 +24,7 @@ syn1 = 2 * np.random.random((4, 1)) - 1
 epoch = 800
 error_history = np.zeros(shape=(epoch, 2))
 bar = progressbar.ProgressBar(maxval=epoch).start()
-for j in xrange(epoch):
+for j in range(epoch):
 
     # forward propagation
     # using sigmoid activation : 1 / (1 + exp(-Wx))
@@ -42,14 +48,14 @@ for j in xrange(epoch):
     bar.update(j)
 
 bar.finish()
-print ''
+print('')
 
 # print output layer rounded
-print 'Final error (MSE): '
-print error_history[-1]
-print ''
-print 'Final output: '
-print np.rint(l2).flatten()
+print('Final error (MSE): ')
+print(error_history[-1])
+print('')
+print('Final output: ')
+print(np.rint(l2).flatten())
 
 # plot error
 f1 = plt.figure(1)

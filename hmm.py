@@ -1,12 +1,34 @@
+"""
 # Hidden Markov Model (HMM)
-# by yohanes.gultom@gmail.com
+
+Usage:
+1. Asking question
+python hmm.py [model file] [first state] [questions]
+Questions:
+-q [transition number] [state]
+-o [transition number] [emission]
+
+Example:
+python hmm.py hakim.json happy -q 2 happy
+python hmm.py hakim.json happy -o 2 frown
+python hmm.py hakim.json happy -q 2 happy -o 2 frown
+python hmm.py hakim.json happy -o 100 yell
+
+2. Find best path (greedy)
+python hmm.py [model file] [first state] -b [transition number]
+
+Example:
+python hmm.py hakim_e.json happy -b 5
+
+@author yohanes.gultom@gmail.com
+"""
 import json
 import sys
 
 def max_key(dic):
     max_key = None
     curmax = 0
-    for key, val in dic.iteritems():
+    for key, val in dic.items():
         if val > curmax:
             curmax = val
             max_key = key
@@ -20,7 +42,8 @@ def reach_state(curstate, question, model):
         next = max_key(curstate['a']) if i < (t-1) else question['q']['state']
         if curstate['a'][next] == None:
             sys.exit('unknown state: ' + next)
-        print str(i) + ' : ' + curstate['label'] + ' -> ' + model[next]['label'] + ' ' + str(curstate['a'][next])
+        # print str(i) + ' : ' + curstate['label'] + ' -> ' + model[next]['label'] + ' ' + str(curstate['a'][next])
+        print('{} : {} -> {} {}'.format(i, curstate['label'], model[next]['label'], curstate['a'][next]))
         prob = prob * curstate['a'][next]
         curstate = model[next]
     return prob
@@ -35,12 +58,14 @@ def reach_emission(curstate, question, model):
             e = curstate['e'][emission]
             if e == None:
                 sys.exit('unknown emission: ' + emission)
-            print emission + ' ' + str(e)
+            # print emission + ' ' + str(e)
+            print('emission {}'.format(e))
             prob = prob * e
         else:
             # always greedy
             next = max_key(curstate['a'])
-            print str(i) + ' : ' + curstate['label'] + ' -> ' + model[next]['label'] + ' ' + str(curstate['a'][next])
+            # print str(i) + ' : ' + curstate['label'] + ' -> ' + model[next]['label'] + ' ' + str(curstate['a'][next])
+            print('{} : {} -> {} {}'.format(i, curstate['label'], model[next]['label'], curstate['a'][next]))
             prob = prob * curstate['a'][next]
             curstate = model[next]
     return prob
@@ -56,14 +81,16 @@ def reach_emission_given_state(curstate, question, model):
             e = curstate['e'][emission]
             if e == None:
                 sys.exit('unknown emission: ' + emission)
-            print emission + ' ' + str(e)
+            # print emission + ' ' + str(e)
+            print('emission {}'.format(e))
             prob = prob * e
         else:
             # greedy if not yet arriving at t-1
             next = max_key(curstate['a']) if i < (t_state-1) else question['q']['state']
             if curstate['a'][next] == None:
                 sys.exit('unknown state: ' + next)
-            print str(i) + ' : ' + curstate['label'] + ' -> ' + model[next]['label'] + ' ' + str(curstate['a'][next])
+            # print str(i) + ' : ' + curstate['label'] + ' -> ' + model[next]['label'] + ' ' + str(curstate['a'][next])
+            print('{} : {} -> {} {}'.format(i, curstate['label'], model[next]['label'], curstate['a'][next]))
             prob = prob * curstate['a'][next]
             curstate = model[next]
     return prob
@@ -94,32 +121,13 @@ def best_path(curstate, question, model):
 
     return prob, best_str
 
-# Usage:
-# 1. Asking question
-# python hmm.py [model file] [first state] [questions]
-# Questions:
-# -q [transition number] [state]
-# -o [transition number] [emission]
-#
-# Example:
-# python hmm.py hakim.json happy -q 2 happy
-# python hmm.py hakim.json happy -o 2 frown
-# python hmm.py hakim.json happy -q 2 happy -o 2 frown
-# python hmm.py hakim.json happy -o 100 yell
-#
-# 2. Find best path (greedy)
-# python hmm.py [model file] [first state] -b [transition number]
-#
-# Example:
-# python hmm.py hakim_e.json happy -b 5
-
 if __name__ == "__main__":
 
     # load data
     with open(sys.argv[1], 'r') as f:
          model = json.load(f)
          # append id
-         for id, state in model.iteritems():
+         for id, state in model.items():
              state['id'] = id
 
     # first state in model
@@ -149,7 +157,7 @@ if __name__ == "__main__":
     curstate = model[first_state]
     if question['b'] != None:
         prob, best = best_path(curstate, question, model)
-        print 'Best path (greedy): ' + best
+        print('Best path (greedy): {}'.format(best))
 
     elif question['q'] != None and question['o'] != None:
         prob = reach_emission_given_state(curstate, question, model)
@@ -160,4 +168,4 @@ if __name__ == "__main__":
     else: # if question['o'] != None
         prob = reach_emission(curstate, question, model)
 
-    print 'Probability: ' + str(prob)
+    print('Probability: {}'.format(prob))
