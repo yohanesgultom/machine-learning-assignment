@@ -1,6 +1,6 @@
 # Machine Learning Assignment
 
-Collection of machine learning algorithms written from scratch with Numpy. Most code here is written to understand how they work. It is not optimized for production. Use it at your own risk.
+Collection of machine learning algorithms written from scratch with `numpy` & `pandas`. Most code here is written to understand how they work. It is not optimized for production. Use it at your own risk.
 
 ## Setup
 
