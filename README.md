@@ -20,6 +20,7 @@ Setup steps:
 1. [Bayesian Network with Expectation-Maximization](bayesnet_em.py)
 1. [Join-Distribution Bayes Classifier](jbc.py)
 1. [Linear Regression](linreg.py) vs [Normal Equation](normalequation.py)
+1. [Logistic Regression](logreg.py)
 1. [Hidden Markov Model](hmm.py)
 1. [Artificial Neural Network](ann.py)
 
